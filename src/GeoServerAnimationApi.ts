@@ -55,7 +55,7 @@ export class GeoServerAnimationApi {
     
     // getAnimations2 loops through all workspaces with a name that begins with "anim_" and picks
     // from each of those workspaces the one group layer that has the same name as the workspace.
-    getAnimations2(handler : any) {
+    getAnimationsFromAllWorkspaces(handler : any) {
         
         let me = this;
         
