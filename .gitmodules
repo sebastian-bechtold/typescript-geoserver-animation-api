@@ -1,0 +1,3 @@
+[submodule "src/typescript-geoserver-rest-api"]
+	path = src/typescript-geoserver-rest-api
+	url = https://github.com/sebastian-bechtold/typescript-geoserver-rest-api.git
