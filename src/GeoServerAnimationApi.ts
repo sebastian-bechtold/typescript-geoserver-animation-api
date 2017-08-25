@@ -15,8 +15,6 @@ export class GeoServerAnimationApi {
         
         let me = this;
         
-        console.log("Getting " + workspace + " : " + name);
-        
         this.gsRestApi.loadLayerGroupAsync(workspace, name, function(result : any) {                        
 
             if (typeof result == "undefined") {
