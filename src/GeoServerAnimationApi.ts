@@ -1,13 +1,13 @@
 // TODO: 3 Use promises
 
-import {GeoServerRestApi} from "../../GeoServerRestApi/src/GeoServerRestApi";
+import {GeoServerRestApi} from "./typescript-geoserver-rest-api/src/GeoServerRestApi";
 
 export class GeoServerAnimationApi {
 
-    gsrr: GeoServerRestApi;
+    gsRestApi: GeoServerRestApi;
    
     constructor(geoserverUrl: URL, proxyUrl : URL, username : string, password : string) {
-        this.gsrr = new GeoServerRestApi(geoserverUrl, proxyUrl, username, password);            
+        this.gsRestApi = new GeoServerRestApi(geoserverUrl, proxyUrl, username, password);            
     }
 
 
@@ -17,7 +17,7 @@ export class GeoServerAnimationApi {
         
         console.log("Getting " + workspace + " : " + name);
         
-        this.gsrr.getLayerGroup(workspace, name, function(result) {                        
+        this.gsRestApi.loadLayerGroupAsync(workspace, name, function(result : any) {                        
 
             if (typeof result == "undefined") {
                 console.error("Failed to get animation " + workspace + ":" + name);
@@ -25,7 +25,7 @@ export class GeoServerAnimationApi {
             }
             
             // Attach URL of GeoServer source:
-            result.geoServerUrl = me.gsrr.geoserverBaseUrl;
+            result.geoServerUrl = me.gsRestApi.geoServerBaseUrl;
             
             handler(result);
         });
@@ -35,7 +35,7 @@ export class GeoServerAnimationApi {
     // getAnimations looks for animation group layers in the passed workspace
     getAnimations(workspace: string, handler : any) {
         
-        this.gsrr.getLayerGroups(workspace, function (layerGroups) {
+        this.gsRestApi.loadLayerGroupListAsync(workspace, function (layerGroups : any) {
             
             let result = [];
 
@@ -59,7 +59,7 @@ export class GeoServerAnimationApi {
         
         let me = this;
         
-        this.getAnimationWorkspaces(function(workspaces) {                       
+        this.getAnimationWorkspaces(function(workspaces : any) {                       
             
             let result = [];
             
@@ -68,7 +68,7 @@ export class GeoServerAnimationApi {
                                     
             for(let ws of workspaces) {
                                               
-                me.gsrr.getLayerGroup(ws.name, ws.name, function(lg) {
+                me.gsRestApi.getLayerGroup(ws.name, ws.name, function(lg) {
 
                     // TODO: 2 What if a request fails?
                     result.push(lg);
@@ -87,7 +87,7 @@ export class GeoServerAnimationApi {
     // TODO: 3 Move name filtering to GeoServerRestReader API
     getAnimationWorkspaces(handler : any) {
         
-        this.gsrr.getWorkspaces(function (workspaces) {
+        this.gsRestApi.loadWorkspacesAsync(function (workspaces : any) {
                                    
             let result = [];
             
