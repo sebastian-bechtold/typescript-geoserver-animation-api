@@ -11,7 +11,7 @@ export class GeoServerAnimationApi {
     }
 
 
-    getAnimation(workspace : string, name : string, handler : any) {
+    loadAnimationAsync(workspace : string, name : string, handler : any) {
         
         let me = this;
         
@@ -33,7 +33,7 @@ export class GeoServerAnimationApi {
 
 
     // getAnimations looks for animation group layers in the passed workspace
-    getAnimations(workspace: string, handler : any) {
+    loadAllAnimationsFromWorkspaceAsync(workspace: string, handler : any) {
         
         this.gsRestApi.loadLayerGroupListAsync(workspace, function (layerGroups : any) {
             
@@ -55,11 +55,11 @@ export class GeoServerAnimationApi {
     
     // getAnimations2 loops through all workspaces with a name that begins with "anim_" and picks
     // from each of those workspaces the one group layer that has the same name as the workspace.
-    getAnimationsFromAllWorkspaces(handler : any) {
+    loadAnimationsFromAllWorkspaces(handler : any) {
         
         let me = this;
         
-        this.getAnimationWorkspaces(function(workspaces : any) {                       
+        this.loadAnimationWorkspacesAsync(function(workspaces : any) {                       
             
             let result : Array<any> = [];
             
@@ -85,14 +85,14 @@ export class GeoServerAnimationApi {
     }
     
     // TODO: 3 Move name filtering to GeoServerRestReader API
-    getAnimationWorkspaces(handler : any) {
+    loadAnimationWorkspacesAsync(handler : any) {
         
         this.gsRestApi.loadWorkspacesAsync(function (workspaces : any) {
-                                   
+                                         
             let result = [];
             
             //###### BEGIN Loop over list of workspaces and filter out those that are animations ######            
-            for (let ws of workspaces.workspaces.workspace) {
+            for (let ws of workspaces) {
                                                 
                 if (ws.name.startsWith("anim_")) {
                     result.push(ws);                
