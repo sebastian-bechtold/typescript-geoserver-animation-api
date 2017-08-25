@@ -61,14 +61,14 @@ export class GeoServerAnimationApi {
         
         this.getAnimationWorkspaces(function(workspaces : any) {                       
             
-            let result = [];
+            let result : Array<any> = [];
             
             let numAnims = workspaces.length;
             let count = 0;
                                     
             for(let ws of workspaces) {
                                               
-                me.gsRestApi.getLayerGroup(ws.name, ws.name, function(lg) {
+                me.gsRestApi.loadLayerGroupAsync(ws.name, ws.name, function(lg : any) {
 
                     // TODO: 2 What if a request fails?
                     result.push(lg);
