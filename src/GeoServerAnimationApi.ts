@@ -6,7 +6,7 @@ export class GeoServerAnimationApi {
 
     gsRestApi: GeoServerRestApi;
    
-    constructor(geoserverUrl: URL, proxyUrl : URL, username : string, password : string) {
+    constructor(geoserverUrl: URL, proxyUrl : URL | null, username : string, password : string) {
         this.gsRestApi = new GeoServerRestApi(geoserverUrl, proxyUrl, username, password);            
     }
 
