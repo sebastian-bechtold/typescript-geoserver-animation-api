@@ -15,17 +15,18 @@ import { Component, Inject, Model, Prop, Vue, Watch } from 'vue-property-decorat
 @Component({})
 export default class AnimationsList extends Vue {
 
-    // TODO: 2 Pass URLs as props
-
-    //################# BEGIN Configuration member variables ###################
-    cfg_geoServerUrl: URL = new URL("http://vmsdkarma.geomer.de/geoserver");
-    cfg_proxyUrl: URL | null = new URL("http://localhost/proxy.php?csurl=");
-    //################# END Configuration member variables ###################
+    //################# BEGIN Props ###################
+    @Prop()
+    geoServerUrl: string;
+    
+    @Prop()
+    proxyUrl: string;
+    //################# END Props ###################
 
     private animations: any = [];
 
     created() {
-        var gsanim = new GeoServerAnimationApi(this.cfg_geoServerUrl, this.cfg_proxyUrl);
+        var gsanim = new GeoServerAnimationApi(this.geoServerUrl, this.proxyUrl);
 
         gsanim.loadAnimationsFromAllWorkspaces((result: any) => {
 
