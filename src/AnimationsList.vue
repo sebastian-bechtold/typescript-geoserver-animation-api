@@ -47,5 +47,23 @@ export default class AnimationsList extends Vue {
 </script>
 
 <style lang="scss">
-div.geoserver-animations-list {}
+div.geoserver-animations-list {
+
+ul{
+    margin: 0;
+    padding:0;
+list-style:none;
+
+    > li {
+        border-bottom:1px solid #ccc;
+        padding:8px;
+
+        &:hover {
+            background-color:#eee;
+            cursor:pointer;
+        }
+    }
+}
+
+}
 </style>
