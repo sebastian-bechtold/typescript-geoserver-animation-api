@@ -72,8 +72,10 @@ export class GeoServerAnimationApi {
 
                 this.gsRestApi.loadLayerGroupAsync(ws.name, ws.name, function (layerGroup: any) {
 
-                    // TODO: 2 What if a request fails?
-                    result.push(layerGroup);
+                    if (layerGroup != null) {                    
+                        result.push(layerGroup);
+                    }
+                    
                     count++;
 
                     if (count == numAnims) {
