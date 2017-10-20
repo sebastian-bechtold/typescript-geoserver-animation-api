@@ -30,6 +30,8 @@ export default class FlowAnimationsList extends Vue {
         let prefix = "flow_";
         
 
+        // NOTE: Animations are layer groups. Thus, GeoServerAnimationApi::loadAnimationsFromAllWorkspaces() returns
+        // a list of layer groups!
         gsanim.loadAnimationsFromAllWorkspaces(prefix, (result: any) => {
 
             for (let layerGroup of result) {

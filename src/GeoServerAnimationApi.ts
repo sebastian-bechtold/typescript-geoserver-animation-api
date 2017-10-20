@@ -58,6 +58,8 @@ export class GeoServerAnimationApi {
     // from each of those workspaces the one group layer that has the same name as the workspace.
     loadAnimationsFromAllWorkspaces(prefix: string, handler: any) {
 
+        // NOTE: loadAnimationsWorkspacesAsync() returns all workspaces 
+        // with a name that begins with the passed prefix.
         this.loadAnimationWorkspacesAsync(prefix, (workspaces: any) => {
 
             let result: Array<any> = [];
@@ -65,6 +67,7 @@ export class GeoServerAnimationApi {
             let numAnims = workspaces.length;
             let count = 0;
 
+            //############ BEGIN Loop over workspaces ##############
             for (let ws of workspaces) {
 
                 this.gsRestApi.loadLayerGroupAsync(ws.name, ws.name, function (layerGroup: any) {
@@ -78,8 +81,8 @@ export class GeoServerAnimationApi {
                         handler(result);
                     }
                 });
-
             }
+            //############ END Loop over workspaces ##############
         });
     }
 

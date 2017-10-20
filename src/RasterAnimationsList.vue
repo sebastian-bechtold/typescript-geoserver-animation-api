@@ -33,9 +33,13 @@ export default class RasterAnimationsList extends Vue {
 
             for (let lg of result) {
 
+                if (lg != null) {
+
                 gsanim.loadAnimationAsync(lg.name, lg.name, (animDetailInfo: any) => {
                     this.animations.push(animDetailInfo);
                 });
+
+                }
             }
         });
     }
