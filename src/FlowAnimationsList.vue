@@ -32,11 +32,11 @@ export default class FlowAnimationsList extends Vue {
 
         // NOTE: Animations are layer groups. Thus, GeoServerAnimationApi::loadAnimationsFromAllWorkspaces() returns
         // a list of layer groups!
-        gsanim.loadAnimationsFromAllWorkspaces(prefix, (result: any) => {
+        gsanim.asyncLoadAnimationsFromAllWorkspaces(prefix).then((result: any) => {
 
             for (let layerGroup of result) {
 
-                gsanim.loadAnimationAsync(layerGroup.name, layerGroup.name, (animDetailInfo: any) => {
+                gsanim.asyncLoadAnimation(layerGroup.name, layerGroup.name).then((animDetailInfo: any) => {
                     this.animations.push(animDetailInfo);
                 });
             }

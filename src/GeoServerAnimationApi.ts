@@ -1,7 +1,3 @@
-// TODO: 2 Add support for request failure handlers
-// TODO: 3 Use promises
-
-
 import { GeoServerRestApi } from "./typescript-geoserver-rest-api/src/GeoServerRestApi";
 
 export class GeoServerAnimationApi {
@@ -14,97 +10,106 @@ export class GeoServerAnimationApi {
     }
 
 
-    loadAnimationAsync(workspace: string, name: string, handler: any) {
+    asyncLoadAnimation(workspace: string, name: string): Promise<any> {
+        
+        return new Promise((resolve, reject) => {
+            this.gsRestApi.asyncLoadLayerGroup(workspace, name).then((result: any) => {
 
-        let me = this;
+                if (typeof result == "undefined") {
+                    console.error("Failed to get animation " + workspace + ":" + name);
+                    reject();
+                }
 
-        this.gsRestApi.loadLayerGroupAsync(workspace, name, function (result: any) {
+                // Attach URL of GeoServer source:
+                result.geoServerUrl = this.gsRestApi.geoServerBaseUrl;
 
-            if (typeof result == "undefined") {
-                console.error("Failed to get animation " + workspace + ":" + name);
-                return;
-            }
-
-            // Attach URL of GeoServer source:
-            result.geoServerUrl = me.gsRestApi.geoServerBaseUrl;
-
-            handler(result);
+                resolve(result);
+            });
         });
     }
 
 
     // getAnimations looks for animation group layers in the passed workspace
-    loadAllAnimationsFromWorkspaceAsync(workspace: string, prefix: string, handler: any) {
+    asyncLoadAllAnimationsFromWorkspaceAsync(workspace: string, prefix: string): Promise<any> {
 
-        this.gsRestApi.loadLayerGroupListAsync(workspace, (layerGroups: any) => {
+        return new Promise((resolve, reject) => {
+            this.gsRestApi.asyncLoadLayerGroupList(workspace).then((layerGroups: any) => {
 
-            let result = [];
+                let result = [];
 
-            //###### BEGIN Loop over list of layer groups and filter out those that are animations ######            
-            for (let lg of layerGroups.layerGroups.layerGroup) {
+                //###### BEGIN Loop over list of layer groups and filter out those that are animations ######            
+                for (let lg of layerGroups.layerGroups.layerGroup) {
 
-                if (lg.name.startsWith(prefix)) {
-                    result.push(lg);
+                    if (lg.name.startsWith(prefix)) {
+                        result.push(lg);
+                    }
                 }
-            }
-            //###### END Loop over list of layer groups and filter out those that are animations ######
+                //###### END Loop over list of layer groups and filter out those that are animations ######
 
-            handler(result);
+                resolve(result);
+            });
         });
     }
 
 
     // getAnimations2 loops through all workspaces with a name that begins with the passed prefix and picks
     // from each of those workspaces the one group layer that has the same name as the workspace.
-    loadAnimationsFromAllWorkspaces(prefix: string, handler: any) {
+    asyncLoadAnimationsFromAllWorkspaces(prefix: string): Promise<any> {
 
-        // NOTE: loadAnimationsWorkspacesAsync() returns all workspaces 
-        // with a name that begins with the passed prefix.
-        this.loadAnimationWorkspacesAsync(prefix, (workspaces: any) => {
+        return new Promise((resolve, reject) => {
+            // NOTE: loadAnimationsWorkspacesAsync() returns all workspaces 
+            // with a name that begins with the passed prefix.
+            this.asyncLoadAnimationWorkspaces(prefix).then((workspaces: any) => {
 
-            let result: Array<any> = [];
+                let result: Array<any> = [];
 
-            let numAnims = workspaces.length;
-            let count = 0;
+                let numAnims = workspaces.length;
+                let count = 0;
 
-            //############ BEGIN Loop over workspaces ##############
-            for (let ws of workspaces) {
+                // TODO: 2 Try to make this more simple and fail-safe unsing promises.
 
-                this.gsRestApi.loadLayerGroupAsync(ws.name, ws.name, function (layerGroup: any) {
+                //############ BEGIN Loop over workspaces ##############
+                for (let ws of workspaces) {
 
-                    if (layerGroup != null) {                    
-                        result.push(layerGroup);
-                    }
-                    
-                    count++;
+                    this.gsRestApi.asyncLoadLayerGroup(ws.name, ws.name).then((layerGroup: any) => {
 
-                    if (count == numAnims) {
-                        console.log("All animations loaded!");
-                        handler(result);
-                    }
-                });
-            }
-            //############ END Loop over workspaces ##############
+                        if (layerGroup != null) {
+                            result.push(layerGroup);
+                        }
+
+                        count++;
+
+                        if (count == numAnims) {
+                            console.log("All animations loaded!");
+                            resolve(result);
+                        }
+                    });
+                }
+                //############ END Loop over workspaces ##############
+            });
         });
     }
 
 
-    loadAnimationWorkspacesAsync(prefix: string, handler: any) {
+    asyncLoadAnimationWorkspaces(prefix: string): Promise<Array<any>> {
 
-        this.gsRestApi.loadWorkspacesAsync((workspaces: any) => {
+        return new Promise((resolve, reject) => {
 
-            let result = [];
+            this.gsRestApi.loadWorkspacesAsync().then((workspaces: any) => {
 
-            //###### BEGIN Loop over list of workspaces and filter out those that are animations ######            
-            for (let ws of workspaces) {
+                let result = [];
 
-                if (ws.name.startsWith(prefix)) {
-                    result.push(ws);
+                //###### BEGIN Loop over list of workspaces and filter out those that are animations ######            
+                for (let ws of workspaces) {
+
+                    if (ws.name.startsWith(prefix)) {
+                        result.push(ws);
+                    }
                 }
-            }
-            //###### END Loop over list of workspaces and filter out those that are animations ######
+                //###### END Loop over list of workspaces and filter out those that are animations ######
 
-            handler(result);
+                resolve(result);
+            });
         });
     }
 }
