@@ -4,9 +4,8 @@ export class GeoServerAnimationApi {
 
     gsRestApi: GeoServerRestApi;
 
-    constructor(geoserverUrl: string, proxyUrl: string) {
-        this.gsRestApi = new GeoServerRestApi(geoserverUrl, proxyUrl);
-
+    constructor(geoserverUrl: string) {
+        this.gsRestApi = new GeoServerRestApi(geoserverUrl);
     }
 
 
@@ -21,7 +20,7 @@ export class GeoServerAnimationApi {
                 }
 
                 // Attach URL of GeoServer source:
-                result.geoServerUrl = this.gsRestApi.geoServerBaseUrl;
+                result.geoServerUrl = this.gsRestApi.geoServerUrl;
 
                 resolve(result);
             });

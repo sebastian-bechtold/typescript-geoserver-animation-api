@@ -17,15 +17,12 @@ export default class RasterAnimationsList extends Vue {
     //################# BEGIN Props ###################
     @Prop()
     geoServerUrl: string;
-
-    @Prop()
-    proxyUrl: string;
     //################# END Props ###################
 
     private animations: any = [];
 
     created() {
-        var gsanim = new GeoServerAnimationApi(this.geoServerUrl, this.proxyUrl);
+        var gsanim = new GeoServerAnimationApi(this.geoServerUrl);
 
         let prefix = "anim_";
 

@@ -16,16 +16,13 @@ export default class FlowAnimationsList extends Vue {
 
     //################# BEGIN Props ###################
     @Prop()
-    geoServerUrl: string;
-
-    @Prop()
-    proxyUrl: string;
+    geoServerUrl: string;    
     //################# END Props ###################
 
     private animations: Array<any> = [];
 
     created() {
-        let gsanim = new GeoServerAnimationApi(this.geoServerUrl, this.proxyUrl);
+        let gsanim = new GeoServerAnimationApi(this.geoServerUrl);
 
         let prefix = "flow_";
         
