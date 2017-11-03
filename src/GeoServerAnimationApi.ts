@@ -77,6 +77,7 @@ export class GeoServerAnimationApi {
                         }
 
                         count++;
+//                        console.log("Animation " + count + " of " + numAnims + " loaded.");
 
                         if (count == numAnims) {
                             console.log("All animations loaded!");
