@@ -61,31 +61,24 @@ export class GeoServerAnimationApi {
             this.asyncLoadAnimationWorkspaces(prefix).then((workspaces: any) => {
 
                 let result: Array<any> = [];
+              
+                let promises = [];
 
-                let numAnims = workspaces.length;
-                let count = 0;
-
-                // TODO: 2 Try to make this more simple and fail-safe unsing promises.
-
-                //############ BEGIN Loop over workspaces ##############
                 for (let ws of workspaces) {
-
-                    this.gsRestApi.asyncLoadLayerGroup(ws.name, ws.name).then((layerGroup: any) => {
-
-                        if (layerGroup != null) {
-                            result.push(layerGroup);
-                        }
-
-                        count++;
-//                        console.log("Animation " + count + " of " + numAnims + " loaded.");
-
-                        if (count == numAnims) {
-                            console.log("All animations loaded!");
-                            resolve(result);
-                        }
-                    });
+                    promises.push(this.gsRestApi.asyncLoadLayerGroup(ws.name, ws.name));
                 }
-                //############ END Loop over workspaces ##############
+
+                Promise.all(promises).then((layerGroups: any) => {
+
+                    console.log(layerGroups);
+                    for(let lg of layerGroups) {
+                        if (lg != null) {
+                            result.push(lg);
+                        }
+                    }
+
+                    resolve(result);
+                });
             });
         });
     }
@@ -95,7 +88,7 @@ export class GeoServerAnimationApi {
 
         return new Promise((resolve, reject) => {
 
-            this.gsRestApi.loadWorkspacesAsync().then((workspaces: any) => {
+            this.gsRestApi.asyncloadWorkspaces().then((workspaces: any) => {
 
                 let result = [];
 
