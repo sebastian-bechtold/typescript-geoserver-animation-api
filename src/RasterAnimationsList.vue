@@ -1,7 +1,17 @@
 <template>
     <div class="raster-animations-list">
         <ul>
-            <li v-for="anim in animations" @click="onAnimationClicked(anim, $event)">{{anim.title}}</li>
+            <li v-for="anim in animations" @click="onAnimationClicked(anim, $event)">
+                <h3>{{anim.title}}</h3>
+                <br/>
+                
+                <table>
+                    <tr><td>Author:</td><td>{{anim.abstract.author}}</td></tr>
+                    <tr><td>Description:</td><td>{{anim.abstract.description}}</td></tr>
+                    <tr><td>Intervalldauer:</td><td>{{anim.abstract.saveIntervalSec}} Seconds</td></tr>
+                </table>
+
+            </li>
         </ul>
     </div>
 </template>
@@ -31,6 +41,8 @@ export default class RasterAnimationsList extends Vue {
             for (let lg of result) {
                 if (lg != null) {
                     gsanim.asyncLoadAnimation(lg.name, lg.name).then((animDetailInfo: any) => {
+                        
+                       
                         this.animations.push(animDetailInfo);
                     });
                 }
@@ -56,6 +68,11 @@ div.raster-animations-list {
         >li {
             border-bottom: 1px solid #ccc;
             padding: 8px;
+
+            h3 {
+                font-size:18px;
+                margin:0;
+            }
 
             &:hover {
                 background-color: #eee;

@@ -19,6 +19,99 @@ export class GeoServerAnimationApi {
                     reject();
                 }
 
+
+                // This is the hard-coded, initial default abstract:
+                result.abstract = {
+                    "uuid": "undefined", 
+                    "customer": "undefined", 
+                    "author": "undefined", 
+                    "description": "No description provided", 
+                    "simulationLengthSec": -1, 
+                    "saveIntervalSec": 600, 
+                    "faVersion": "1.0.0.0", 
+                    "faLicense": null, 
+                    "mode": null, 
+                    "nameEn": null, 
+                    "nameDe": null, 
+                    "dem": null, 
+                    "demUnits": null, 
+                    "barrier": null, 
+                    "roughness": null, 
+                    "language": null, 
+                    "aboveSurface": false, 
+                    "velocities": false, 
+                    "continueRaster": 0, 
+                    "wktGeometry": 
+                    "SRID=EPSG:3857;POLYGON ((987818.8199599204 6137657.883410599, 989704.3402626155 6137657.883410599, 989704.3402626155 6139947.90537729, 987818.8199599204 6139947.90537729, 987818.8199599204 6137657.883410599))" 
+                }
+                
+
+                let ta = null;
+
+                try {
+                    ta = JSON.parse(result.abstractTxt);
+                }
+                catch(e) {
+
+                }
+
+                if (ta != null) {
+                    console.log("here we go!");
+
+                    if (typeof ta.customer != "undefined") {
+                        result.abstract.customer = ta.customer;
+                    }
+
+                    if (typeof ta.author != "undefined") {
+                        result.abstract.author = ta.author;
+                    }
+
+                    if (typeof ta.description != "undefined") {
+                        result.abstract.description = ta.description;
+                    }
+                    
+                    if (typeof ta.simulationLengthSec != "undefined") {
+                        result.abstract.simulationLengthSec = ta.simulationLengthSec;
+                    }
+
+                    if (typeof ta.saveIntervalSec != "undefined") {
+                        result.abstract.saveIntervalSec = ta.saveIntervalSec;
+                    }
+
+                    // TODO: 4 Copy the remaining attributes, too?
+                }
+                //let trueAbstract = JSON.parse(result.abstractTxt);
+                
+
+                // TODO: 2 Read true values from actual abstract JSON
+
+                // Example abstract JSON:
+                /*
+                let bla = { "uuid": "3f3cb4f3-f7b2-418d-a9a2-ba3e4477c8dd", 
+                            "customer": "geomer", 
+                            "author": "Master of Disaster", 
+                            "description": "Geht doch", 
+                            "simulationLengthSec": 10800, 
+                            "saveIntervalSec": 600, 
+                            "faVersion": "1.0.0.0", 
+                            "faLicense": null, 
+                            "mode": null, 
+                            "nameEn": null, 
+                            "nameDe": null, 
+                            "dem": null, 
+                            "demUnits": null, 
+                            "barrier": null, 
+                            "roughness": null, 
+                            "language": null, 
+                            "aboveSurface": false, 
+                            "velocities": false, 
+                            "continueRaster": 0, 
+                            "wktGeometry": "SRID=EPSG:3857;POLYGON ((987818.8199599204 6137657.883410599, 989704.3402626155 6137657.883410599, 989704.3402626155 6139947.90537729, 987818.8199599204 6139947.90537729, 987818.8199599204 6137657.883410599))" 
+                        }
+                */
+
+                console.log(result);
+
                 // Attach URL of GeoServer source:
                 result.geoServerUrl = this.gsRestApi.geoServerUrl;
 
@@ -68,9 +161,10 @@ export class GeoServerAnimationApi {
                     promises.push(this.gsRestApi.asyncLoadLayerGroup(ws.name, ws.name));
                 }
 
+                // TODO: 2 What if not all promises are resolved? With the current solution, the entire load request
+                // will fail and nothing will be returned, but is this what we want?
                 Promise.all(promises).then((layerGroups: any) => {
-
-                    console.log(layerGroups);
+                    
                     for(let lg of layerGroups) {
                         if (lg != null) {
                             result.push(lg);
